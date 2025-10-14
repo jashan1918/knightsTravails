@@ -1,0 +1,13 @@
+{
+  "name": "knightstravails",
+  "version": "1.0.0",
+  "main": "knightsTravails.js",
+  "type": "module",
+  "scripts": {
+    "start": "node ./knightsTravails"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
