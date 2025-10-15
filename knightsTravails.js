@@ -6,6 +6,11 @@ function minKnightMoves(start, end) {
   let current = start;
 const visited = Array.from({length : 8}, () => Array(8).fill(false));
 let queue = [];
+//breadCrumbs
+  let cameFrom = new Map();
+
+    const startKey = `${start[0]},${start[1]}`;
+  const endKey = `${end[0]},${end[1]}`;
 
 queue.push(start);
 visited[start[0]] [start[1]] = true;
@@ -13,7 +18,7 @@ visited[start[0]] [start[1]] = true;
 
 //check if the move is inside the board or not
  const isInsideBoard = (nextX, nextY) => {
-  return (nextX > 0 && nextX < 7 && nextY > 0 && nextY < 7)
+  return (nextX >= 0 && nextX <= 7 && nextY >= 0 && nextY <= 7)
  }
 
 
@@ -21,28 +26,57 @@ visited[start[0]] [start[1]] = true;
   while(queue.length) {
     current = queue.shift();
 
+
+       const [currX, currY] = current;
+    const currentKey = `${currX},${currY}`;
+
+
     //check if we reached the end
-    if(current[0] === end[0] && current[1] === end[1]) {
-      console.log("We reached the end", end);
-      return;
+    if(currX === end[0] && currY === end[1]) {
+      shortestPath(startKey, endKey, cameFrom)
     }
 
 
-    const possibleMoves = getMoves(current[0], current[1]);
-    console.log(possibleMoves);
+    const possibleMoves = getMoves(currX, currY);
+    // console.log(possibleMoves);
 
     //use For Of loop to go through each index  and check
 
     for(const [moveX, moveY] of possibleMoves) {
 
       if(isInsideBoard(moveX, moveY) && !visited[moveX][moveY]) {
+        const nextKey = `${moveX},${moveY}`;
+        cameFrom.set(nextKey, currentKey);
+
         visited[moveX][moveY] = true;
+      
         queue.push([moveX, moveY]);
       }
     }
   }
 }
 
+const shortestPath = (start, end, cameFrom) => {
+  const path = [];
+  let currentKey = end;
+
+  while(currentKey) {
+    const [r, c] = currentKey.split(',').map(Number);
+    path.push([r, c])
+
+     if (currentKey === start) {
+            break; 
+        }
+
+
+    currentKey = cameFrom.get(currentKey); 
+  }
+
+      path.reverse(); 
+
+      console.log("Shortest Path:", path);
+      return path;
+}
 
 
  const getMoves = (x, y) => {
